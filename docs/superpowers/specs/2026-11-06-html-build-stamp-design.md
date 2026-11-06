@@ -13,13 +13,13 @@
  * name: frontend
  * version: 2.1.0
  * build_time: 2026-11-06 12:38:09
+ * build_hash: 3fa2c71d
  * git_commit: a7f2c71d
  * git_branch: main
- * build_hash: 3fa2c71d
 -->
 ```
 
-字段按固定顺序输出：`name, version, build_time, git_commit, git_branch, build_hash`；`fields` 默认顺序同此。
+字段按固定顺序输出：`name, version, build_time, build_hash, git_commit, git_branch`；`fields` 默认顺序同此。
 
 - `name` / `version`：读取 package.json
 - `build_time`：`YYYY-MM-DD HH:mm:ss`，本地时区
@@ -30,7 +30,7 @@
 ## 关键决策
 
 1. **字段缺失整行跳过**（不显示空值或 skip）
-2. **字段输出按固定顺序**：`name, version, build_time, git_commit, git_branch, build_hash`；`fields` 默认值同此顺序
+2. **字段输出按固定顺序**：`name, version, build_time, build_hash, git_commit, git_branch`；`fields` 默认值同此顺序
 3. **build_hash**：`generateBundle` 遍历产物文件名收集 `-[0-9a-f]{8,}` hash 段 → FNV-1a 8 位；无产物（dev）降级为其余字段内容 hash
 4. **字段开关用数组白名单**：`fields: FieldName[]`
 5. **注释位置**：仅 `top`（文档最顶）/ `head-start`（`<head>` 后），默认 `top`
