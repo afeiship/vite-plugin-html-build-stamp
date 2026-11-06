@@ -14,10 +14,10 @@ npm install @jswork/vite-plugin-html-build-stamp
 ## usage
 ```ts
 import { defineConfig } from 'vite';
-import plugin from '@jswork/vite-plugin-html-build-stamp';
+import vitePluginHtmlBuildStamp from '@jswork/vite-plugin-html-build-stamp';
 
 export default defineConfig({
-  plugins: [plugin()],
+  plugins: [vitePluginHtmlBuildStamp()],
 });
 ```
 
