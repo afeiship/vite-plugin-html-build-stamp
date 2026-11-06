@@ -28,9 +28,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "peerDependencies": {
-    "@jswork/next": "*"
-  },
   "keywords": [
     "vite",
     "plugin",

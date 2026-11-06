@@ -10,8 +10,7 @@ describe('plugin', () => {
     const plugin = pluginFactory() as any;
     const html = '<!DOCTYPE html><html><head></head></html>';
     const out = plugin.transformIndexHtml(html, { path: '/index.html' });
-    expect(out.html.startsWith('<!--\n * name:')).toBe(true);
-    expect(out.injectTo).toBeUndefined();
+    expect(out.startsWith('<!--\n * name:')).toBe(true);
   });
 
   test('02/generateBundle derives build_hash from bundle filenames', () => {
@@ -19,20 +18,20 @@ describe('plugin', () => {
     const ctx = { bundle: mockBundle(['index-a1b2c3d4.js', 'style-5e6f7a8b.css', 'logo.svg']) };
     plugin.generateBundle.call(plugin, ctx as any, ctx.bundle as any, {} as any);
     const out = plugin.transformIndexHtml('<html></html>', { path: '/index.html' });
-    expect(out.html).toMatch(/build_hash: [0-9a-f]{8}/);
+    expect(out).toMatch(/build_hash: [0-9a-f]{8}/);
   });
 
   test('03/disabled when enable=false', () => {
     const plugin = pluginFactory({ enable: false }) as any;
     const out = plugin.transformIndexHtml('<html></html>', { path: '/index.html' });
-    expect(out.html).toBe('<html></html>');
+    expect(out).toBe('<html></html>');
   });
 
   test('04/fields whitelist filters lines', () => {
     const plugin = pluginFactory({ fields: ['name', 'version'] }) as any;
     const out = plugin.transformIndexHtml('<html></html>', { path: '/index.html' });
-    expect(out.html).toContain(' * name:');
-    expect(out.html).not.toContain('git_commit');
+    expect(out).toContain(' * name:');
+    expect(out).not.toContain('git_commit');
   });
 
   test('05/types exported', async () => {

@@ -75,10 +75,10 @@ const factory = (inOptions?: Options): Plugin => {
       stampFields.build_hash = buildHashFromBundle(bundle as any) || contentHash();
     },
     transformIndexHtml(html, ctx: { server?: unknown } = {}) {
-      if (!enable) return { html };
+      if (!enable) return html;
 
       // Dev detection: the hook context carries `server` only in the dev server.
-      if (ctx?.server && !enableInDev) return { html };
+      if (ctx?.server && !enableInDev) return html;
 
       ensureFields();
 
@@ -88,8 +88,8 @@ const factory = (inOptions?: Options): Plugin => {
       const selected: StampFields = {};
       for (const f of fields) selected[f] = all[f] ?? null;
       const comment = buildStampComment(selected);
-      if (!comment) return { html };
-      return { html: `${comment}\n${html}` };
+      if (!comment) return html;
+      return `${comment}\n${html}`;
     },
   };
 };
