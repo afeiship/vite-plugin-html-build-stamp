@@ -34,6 +34,13 @@ const factory = (inOptions?: Options): Plugin => {
     };
   };
 
+  const ensureFields = (inRoot?: string) => {
+    if (inRoot || !started) {
+      initFields(inRoot);
+      started = true;
+    }
+  };
+
   const readPkg = (inRoot: string): { name?: string; version?: string } => {
     try {
       const raw = JSON.parse(readFileSync(`${inRoot}/package.json`, 'utf8'));
@@ -61,13 +68,10 @@ const factory = (inOptions?: Options): Plugin => {
     name: PLUGIN_NAME,
     buildStart() {
       const root = this.environment?.config?.root || process.cwd();
-      initFields(root);
+      ensureFields(root);
     },
     generateBundle(_options, bundle) {
-      if (!started) {
-        initFields();
-        started = true;
-      }
+      ensureFields();
       stampFields.build_hash = buildHashFromBundle(bundle as any) || contentHash();
     },
     transformIndexHtml(html, ctx: { server?: unknown } = {}) {
@@ -76,10 +80,7 @@ const factory = (inOptions?: Options): Plugin => {
       // Dev detection: the hook context carries `server` only in the dev server.
       if (ctx?.server && !enableInDev) return { html };
 
-      if (!started) {
-        initFields();
-        started = true;
-      }
+      ensureFields();
 
       const all: StampFields = { ...stampFields };
       if (!all.build_hash) all.build_hash = contentHash();
