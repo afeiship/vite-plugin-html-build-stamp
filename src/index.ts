@@ -67,7 +67,8 @@ const factory = (inOptions?: Options): Plugin => {
   return {
     name: PLUGIN_NAME,
     buildStart() {
-      const root = this.environment?.config?.root || process.cwd();
+      const env = this as unknown as { environment?: { config?: { root?: string } } };
+      const root = env.environment?.config?.root || process.cwd();
       ensureFields(root);
     },
     generateBundle(_options, bundle) {

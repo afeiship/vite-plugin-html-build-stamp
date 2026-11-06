@@ -16,7 +16,7 @@ interface GitLikeEnv {
 const short7 = (inValue?: string) => (inValue ? inValue.slice(0, 7) : null);
 
 /** CI env vars first (GitLab / GitHub / generic), then local git command. */
-export function readGitInfo(inEnv: GitLikeEnv = process.env, inCwd: string = process.cwd()): GitInfo {
+export function readGitInfo(inEnv: GitLikeEnv = process.env as GitLikeEnv, inCwd: string = process.cwd()): GitInfo {
   if (
     inEnv.GITLAB_CI ||
     inEnv.GITHUB_ACTIONS ||
