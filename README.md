@@ -12,19 +12,42 @@ npm install @jswork/vite-plugin-html-build-stamp
 ```
 
 ## usage
-```js
+```ts
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import vitePlugin from '@jswork/vite-plugin-html-build-stamp';
+import plugin from '@jswork/vite-plugin-html-build-stamp';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), vitePlugin()],
-  server: {
-    host: '0.0.0.0'
-  }
+  plugins: [plugin()],
 });
 ```
+
+Injected comment (top of index.html, build only by default):
+
+```
+<!--
+ * name: frontend
+ * version: 2.1.0
+ * build_time: 2026-11-06 12:38:09
+ * build_hash: 3fa2c71d
+ * git_commit: a7f2c71
+ * git_branch: main
+-->
+```
+
+## options
+
+| option | type | default | description |
+|---|---|---|---|
+| `fields` | `string[]` | all 6 | Whitelist of injected fields (order fixed: name, version, build_time, build_hash, git_commit, git_branch) |
+| `enable` | `boolean` | `true` | Master switch |
+| `enableInDev` | `boolean` | `false` | Also inject during dev server |
+
+## field sources
+
+- `name` / `version`: `package.json`
+- `build_time`: local time, `YYYY-MM-DD HH:mm:ss`
+- `build_hash`: hash of collected bundle filename hashes (falls back to content hash in dev)
+- `git_commit` / `git_branch`: CI env vars first (GitLab CI, GitHub Actions), then local `git`. Missing → line omitted.
 
 ## license
 Code released under [the MIT license](https://github.com/afeiship/vite-plugin-html-build-stamp/blob/main/LICENSE.txt).
