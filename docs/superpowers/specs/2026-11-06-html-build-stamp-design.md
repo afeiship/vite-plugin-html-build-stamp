@@ -10,14 +10,16 @@
 
 ```
 <!--
+ * build_hash: 3fa2c71d
+ * build_time: 2026-11-06 12:38:09
+ * git_branch: main
+ * git_commit: a729f41
  * name: frontend
  * version: 2.1.0
- * build_time: 2026-11-06 12:38:09
- * git_commit: a729f41
- * git_branch: main
- * build_hash: 3fa2c71d
 -->
 ```
+
+字段按字母序排列，`fields` 白名单默认顺序同为字母序。
 
 - `name` / `version`：读取 package.json
 - `build_time`：`YYYY-MM-DD HH:mm:ss`，本地时区
@@ -28,10 +30,11 @@
 ## 关键决策
 
 1. **字段缺失整行跳过**（不显示空值或 skip）
-2. **build_hash**：`generateBundle` 遍历产物文件名收集 `-[0-9a-f]{8,}` hash 段 → FNV-1a 8 位；无产物（dev）降级为其余字段内容 hash
-3. **字段开关用数组白名单**：`fields: FieldName[]`
-4. **注释位置**：仅 `top`（文档最顶）/ `head-start`（`<head>` 后），默认 `top`
-5. **dev 默认不注入**：`enableInDev` 默认 `false`
+2. **字段输出按字母序**：`build_hash, build_time, git_branch, git_commit, name, version`；`fields` 默认值同为该顺序
+3. **build_hash**：`generateBundle` 遍历产物文件名收集 `-[0-9a-f]{8,}` hash 段 → FNV-1a 8 位；无产物（dev）降级为其余字段内容 hash
+4. **字段开关用数组白名单**：`fields: FieldName[]`
+5. **注释位置**：仅 `top`（文档最顶）/ `head-start`（`<head>` 后），默认 `top`
+6. **dev 默认不注入**：`enableInDev` 默认 `false`
 
 ## API
 
