@@ -23,8 +23,13 @@
 
 - `name` / `version`：读取 package.json
 - `build_time`：`YYYY-MM-DD HH:mm:ss`，本地时区
-- `git_commit`：`git rev-parse --short=7 HEAD`
-- `git_branch`：`git rev-parse --abbrev-ref HEAD`
+- `git_commit` / `git_branch` 获取策略（按优先级降级）：
+  1. CI 环境变量（检测到 CI 时优先，无需 git 命令）：
+     - GitLab CI：`CI_COMMIT_SHORT_SHA`（截取 7 位）、`CI_COMMIT_REF_NAME`
+     - GitHub Actions：`GITHUB_SHA`（截取 7 位）、`GITHUB_REF_NAME`
+     - 通用：`GIT_COMMIT` / `GIT_BRANCH`（部分 CI 提供）
+  2. 非 CI 环境：`spawnSync('git', ...)` 读取本地仓库
+  3. 都失败 → 对应行不显示
 - `build_hash`：汇总本次产物文件名 hash 段的 8 位 FNV-1a
 
 ## 关键决策
@@ -55,7 +60,7 @@ interface Options {
 ```
 src/
   index.ts        # 插件入口、Options、factory
-  git-info.ts     # git commit/branch 读取（spawnSync，无仓库返回 null）
+  git-info.ts     # git 信息读取：CI 环境变量优先（GitLab/GitHub/通用），降级 spawnSync git，全失败返回 null
   stamp.ts        # 注释生成（转义、字段过滤、FNV-1a hash）
 __tests__/
   stamp.spec.ts
@@ -66,14 +71,14 @@ __tests__/
 
 ## 错误处理
 
-- git 静默失败：无仓库 / 命令不可用 → 对应行不显示，不阻塞构建
+- git 静默失败：无仓库 / git 命令不可用（CI 常见）/ 无 CI 变量 → 对应行不显示，不阻塞构建
 - package.json 读取失败 → name/version 行不显示
 - 值转义：移除 `--`、`<`、`>`、换行等，防破坏注释结构
 
 ## 测试
 
 - stamp：模板生成、字段白名单过滤、转义、hash 降级
-- git-info：成功 / 无仓库 / 命令失败路径
+- git-info：CI 变量路径（GitLab/GitHub/通用）/ 本地 git 成功 / 无仓库 / 命令失败路径
 - 手动验证：dev + build 示例项目各跑一次，确认注入位置与内容
 
 ## 交付物
