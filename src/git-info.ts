@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
-export type GitInfo = { commit: string; branch: string } | null;
+export type GitInfo = { commit: string | null; branch: string | null } | null;
 
 interface GitLikeEnv {
   GITLAB_CI?: string;
@@ -27,17 +27,13 @@ export function readGitInfo(inEnv: GitLikeEnv = process.env, inCwd: string = pro
     const commit = short7(inEnv.CI_COMMIT_SHORT_SHA || inEnv.GITHUB_SHA || inEnv.GIT_COMMIT);
     const branch = inEnv.CI_COMMIT_REF_NAME || inEnv.GITHUB_REF_NAME || inEnv.GIT_BRANCH || null;
     if (!commit && !branch) return null;
-    return { commit: commit || null, branch: branch || null } as GitInfo;
+    return { commit, branch };
   }
 
-  try {
-    const commit = runGit(['rev-parse', '--short=7', 'HEAD'], inCwd);
-    const branch = runGit(['rev-parse', '--abbrev-ref', 'HEAD'], inCwd);
-    if (!commit && !branch) return null;
-    return { commit: commit || null, branch: branch || null } as GitInfo;
-  } catch {
-    return null;
-  }
+  const commit = runGit(['rev-parse', '--short=7', 'HEAD'], inCwd);
+  const branch = runGit(['rev-parse', '--abbrev-ref', 'HEAD'], inCwd);
+  if (!commit && !branch) return null;
+  return { commit, branch };
 }
 
 function runGit(inArgs: string[], inCwd: string): string | null {
