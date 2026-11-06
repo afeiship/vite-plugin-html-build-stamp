@@ -1,6 +1,6 @@
 {
   "name": "@jswork/vite-plugin-html-build-stamp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Inject lightweight build stamp comment into html for vite app.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
