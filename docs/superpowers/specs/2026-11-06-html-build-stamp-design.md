@@ -33,7 +33,7 @@
 2. **字段输出按固定顺序**：`name, version, build_time, build_hash, git_commit, git_branch`；`fields` 默认值同此顺序
 3. **build_hash**：`generateBundle` 遍历产物文件名收集 `-[0-9a-f]{8,}` hash 段 → FNV-1a 8 位；无产物（dev）降级为其余字段内容 hash
 4. **字段开关用数组白名单**：`fields: FieldName[]`
-5. **注释位置**：仅 `top`（文档最顶）/ `head-start`（`<head>` 后），默认 `top`
+5. **注释固定注入文档最顶部（top）**，不提供 position 配置
 6. **dev 默认不注入**：`enableInDev` 默认 `false`
 
 ## API
@@ -42,8 +42,7 @@
 type FieldName = 'name' | 'version' | 'build_time' | 'git_commit' | 'git_branch' | 'build_hash';
 
 interface Options {
-  fields?: FieldName[];             // 默认全部 6 个
-  position?: 'top' | 'head-start';  // 默认 'top'
+  fields?: FieldName[];             // 默认全部 6 个，按固定顺序
   enable?: boolean;                 // 默认 true
   enableInDev?: boolean;            // 默认 false
 }
@@ -69,7 +68,6 @@ __tests__/
 
 - git 静默失败：无仓库 / 命令不可用 → 对应行不显示，不阻塞构建
 - package.json 读取失败 → name/version 行不显示
-- `head-start` 找不到 `<head>` → 降级为 `top`
 - 值转义：移除 `--`、`<`、`>`、换行等，防破坏注释结构
 
 ## 测试
