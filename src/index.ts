@@ -27,7 +27,7 @@ const factory = (inOptions?: Options): Plugin => {
     stampFields = {
       name: pkg.name ?? null,
       version: pkg.version ?? null,
-      build_time: new Date().toLocaleString('sv-SE').replace('T', ' '),
+      build_time: new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Shanghai' }),
       build_hash: null,
       git_commit: git?.commit ?? null,
       git_branch: git?.branch ?? null,
